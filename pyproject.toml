@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "lnkshrt-cli"
+version = "0.1.0"
+description = "lnkshrt-cli is a command-line interface (CLI) tool for interacting with the lnkshrt link shortening API. It provides a convenient way to manage and utilize the features of the lnkshrt API directly from the command line."
+authors = ["vivekashok1221 <vivekashok1221@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+packages = [{include = "lnkshrt_cli"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = {extras = ["all"], version = "^0.9.0"}
+loguru = "^0.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.11.0"
+pre-commit = "^3.3.3"
+black = "^23.3.0"
+pyright = "^1.1.316"
+
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.black]
+line-length = 100
+
+[tool.taskipy.tasks]
+precommit = { cmd = "pre-commit install", help="Installs pre-commit hooks."}
+lint = { cmd = "pre-commit run --all-files", help = "Lints project." }
+format = { cmd = "black .", help = "Runs Black autoformatter." }
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

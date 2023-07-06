@@ -1,0 +1,32 @@
+exclude: alembic/
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-ast
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        additional_dependencies: [ flake8-annotations, flake8-bugbear, flake8-docstrings ]
+
+  - repo: local
+    hooks:
+      - id: black
+        name: Black
+        description: Format python files with Black autoformatter.
+        language: system
+        entry: black .
+        require_serial: true
+        pass_filenames: false
