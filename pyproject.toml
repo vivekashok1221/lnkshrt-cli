@@ -5,7 +5,6 @@ description = "lnkshrt-cli is a command-line interface (CLI) tool for interactin
 authors = ["vivekashok1221 <vivekashok1221@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
-packages = [{include = "lnkshrt_cli"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
