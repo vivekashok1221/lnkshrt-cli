@@ -2,6 +2,7 @@ from typing import Annotated
 from uuid import UUID
 
 import typer
+from api_utils import register_user
 
 app = typer.Typer(pretty_exceptions_show_locals=False)
 
@@ -13,7 +14,7 @@ def signup(
     password: Annotated[str, typer.Option(prompt=True, confirmation_prompt=True, hide_input=True)],
 ) -> None:
     """Create a new user account."""
-    raise NotImplementedError
+    print(register_user(username, password, email))
 
 
 @app.command()
