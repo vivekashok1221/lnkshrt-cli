@@ -1,15 +1,21 @@
 from pathlib import Path
 from typing import Annotated
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urljoin
 
 import typer
 from rich import print
 from tomlkit import dump, load
 
 from lnkshrt_cli.config import INSTANCE_URL, SETTINGS_FILE
-from lnkshrt_cli.utils import create_link, create_qr_code, create_token, delete_link, register_user
+from lnkshrt_cli.utils import (
+    create_link,
+    create_qr_code,
+    create_token,
+    delete_link,
+    register_user,
+    validate_url,
+)
 
-ALLOWED_SCHEMES = {"http", "https"}
 INSTANCE_URL_HELP_TEXT = (
     "The URL of the instance to use for shortening links."
     "If invoked without any value, the instance URL will be reset to the default."
@@ -32,7 +38,13 @@ def login(
     username: Annotated[str, typer.Option()],
     password: Annotated[str, typer.Option(prompt=True, hide_input=True)],
 ) -> None:
-    """Authenticate with an existing user account."""
+    """
+    Authenticate with an existing user account.
+
+    Upon successful authentication, an authentication token will be
+    generated and stored for future API requests.
+    Accounts can be created using the `lnkshrt signup` command.
+    """
     token = create_token(username, password)
     with open(SETTINGS_FILE, "r") as f:
         configuration = load(f)
@@ -93,17 +105,7 @@ def config(
     with open(SETTINGS_FILE, "r") as f:
         configuration = load(f)
     updated = []
-    if instance_url:
-        scheme = urlsplit(instance_url).scheme
-        if scheme == "":
-            print(
-                "URL scheme is missing. Please include 'http://' or 'https://' "
-                "at the beginning of the URL.   "
-            )
-            raise typer.Abort()
-        elif scheme not in ALLOWED_SCHEMES:
-            print("Invalid URL scheme. Only 'http://' and 'https://' schemes are allowed.")
-            raise typer.Abort()
+    if instance_url and validate_url(instance_url):
         configuration["custom"]["instance_url"] = instance_url
         updated.append("instance URL")
 

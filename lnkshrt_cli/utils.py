@@ -10,6 +10,8 @@ from rich import print
 
 from lnkshrt_cli.config import INSTANCE_URL, TOKEN
 
+ALLOWED_SCHEMES = {"http", "https"}
+
 
 def _send_request(
     method: str,
@@ -140,3 +142,22 @@ def create_qr_code(text: str, destination: str) -> None:
     """
     img = qrcode.make(text)
     img.save(destination)
+
+
+def validate_url(url: str) -> bool:
+    """Validates whether a given URL is valid and accessible."""
+    scheme = urlsplit(url).scheme
+    if scheme == "":
+        print(
+            "URL scheme is missing. Please include 'http://' or 'https://' "
+            "at the beginning of the URL.   "
+        )
+        raise typer.Abort()
+    elif scheme not in ALLOWED_SCHEMES:
+        print("Invalid URL scheme. Only 'http://' and 'https://' schemes are allowed.")
+        raise typer.Abort()
+
+    res = _send_request(method="GET", base_url=url, endpoint="/ping")
+    if res:
+        return True
+    return False
