@@ -1,11 +1,11 @@
-import configparser
+from tomlkit import load
 
-config = configparser.ConfigParser()
-config.read("lnkshrt.ini")
+SETTINGS_FILE = "settings.toml"
+
+with open(SETTINGS_FILE, "r") as f:
+    config = load(f)
 
 default_instance_url = config["default"]["instance_url"]
-if not (INSTANCE_URL := config.get("custom", "instance_url")):
-    INSTANCE_URL = default_instance_url
 
-
+INSTANCE_URL = config["custom"]["instance_url"] or default_instance_url
 TOKEN = config["authentication"].get("token")
