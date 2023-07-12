@@ -4,7 +4,8 @@ from urllib.parse import urljoin, urlsplit
 import httpx
 import qrcode
 import typer
-from httpx import HTTPStatusError
+from httpx import ConnectError, HTTPStatusError
+from loguru import logger
 from rich import print
 
 from lnkshrt_cli.config import INSTANCE_URL, TOKEN
@@ -16,15 +17,38 @@ def _send_request(
     json: dict[str, typing.Any] | None = None,
     data: dict[str, typing.Any] | None = None,
     headers: dict[str, str] | None = None,
-) -> dict[str, typing.Any]:
-    with httpx.Client() as client:
-        response = client.request(
-            method=method,
-            url=urljoin(INSTANCE_URL, endpoint),
-            json=json,
-            data=data,
-            headers=headers,
+    base_url: str | None = None,
+) -> dict[str, typing.Any] | bool:
+    if base_url is None:
+        base_url = INSTANCE_URL
+    if headers:
+        token = headers.get("Authorization", "").removeprefix("Bearer ")
+        if not token:
+            print(
+                "Authentication token is missing. "
+                "Please log in using 'lnkshrt login' to generate a token."
+            )
+            raise typer.Abort()
+    try:
+        with httpx.Client() as client:
+            response = client.request(
+                method=method,
+                url=urljoin(base_url, endpoint),
+                json=json,
+                data=data,
+                headers=headers,
+            )
+    except ConnectError:
+        print(
+            f"[yellow]Warning: Unable to establish a connection to the API at {base_url}. "
+            "Please ensure that the URL is correct and the API is accessible."
         )
+        return False
+    except Exception as e:
+        logger.error("An unexpected error occurred.")
+        print(e)
+        raise typer.Abort()
+
     try:
         response.raise_for_status()
         return response.json()
@@ -40,8 +64,7 @@ def _send_request(
                 print(error_detail)
             else:
                 print(
-                    "Invalid API token provided."
-                    "Please use `lnkshrt login` to generate a new token."
+                    "Invalid API token provided." "Please use `lnkshrt login` to generate a token."
                 )
         else:
             print(error_detail)
