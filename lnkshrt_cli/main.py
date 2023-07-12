@@ -1,12 +1,13 @@
+from pathlib import Path
 from typing import Annotated
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 import typer
 from rich import print
 from tomlkit import dump, load
 
-from lnkshrt_cli.config import SETTINGS_FILE
-from lnkshrt_cli.utils import create_link, create_token, delete_link, register_user
+from lnkshrt_cli.config import INSTANCE_URL, SETTINGS_FILE
+from lnkshrt_cli.utils import create_link, create_qr_code, create_token, delete_link, register_user
 
 ALLOWED_SCHEMES = {"http", "https"}
 INSTANCE_URL_HELP_TEXT = (
@@ -46,10 +47,33 @@ def create(
     custom_path: Annotated[
         str, typer.Option(help="Specify a custom path for the shortened URL.")
     ] = "",
+    generate_qr_code: Annotated[
+        str,
+        typer.Option(
+            help="If provided, generate a QR code for the shortened URL"
+            "The generated QR code image will be saved to the specified location."
+        ),
+    ] = "",
 ) -> None:
     """Create a shortened URL."""
     custom_path = custom_path or None
-    print(create_link(url, custom_path))
+    short_url = create_link(url, custom_path)
+    link = urljoin(INSTANCE_URL, short_url)
+    print(f"[yellow]link:[/] {link}")
+
+    if generate_qr_code:
+        destination = Path(generate_qr_code)
+        try:
+            destination.mkdir(parents=True, exist_ok=True)  # Making sure the path exists.
+        except PermissionError:
+            print(
+                "[red]Unable to save the QR code image."
+                "Please check the specified path and ensure you have the necessary permissions."
+            )
+            raise typer.Exit(1)
+        destination = destination.joinpath(short_url + ".png").absolute()
+        create_qr_code(link, str(destination))
+        print(f"QR code saved at {destination}")
 
 
 @app.command()

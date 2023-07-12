@@ -2,8 +2,10 @@ import typing
 from urllib.parse import urljoin, urlsplit
 
 import httpx
+import qrcode
 import typer
 from httpx import HTTPStatusError
+from rich import print
 
 from lnkshrt_cli.config import INSTANCE_URL, TOKEN
 
@@ -85,7 +87,7 @@ def create_link(url: str, custom_path: str | None = None) -> str:
         headers=headers,
     )
 
-    return urljoin(INSTANCE_URL, res["shortened_url"])
+    return res["shortened_url"]
 
 
 def delete_link(url: str) -> str:
@@ -105,3 +107,13 @@ def delete_link(url: str) -> str:
         headers=headers,
     )
     return res["message"]
+
+
+def create_qr_code(text: str, destination: str) -> None:
+    """
+    Generate a QR code image from the provided text and save it to the specified destination.
+
+    The file path should exist and also include the file name.
+    """
+    img = qrcode.make(text)
+    img.save(destination)
