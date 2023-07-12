@@ -8,16 +8,16 @@
 
 # The default URL of the link shortener API instance.
 # This URL will be used if no custom URL is specified.
-instance_url = https://l.vivekashok.me
+instance_url = "https://l.vivekashok.me"
 
 [custom]
 # Specify the URL of your custom instance of the API.
 # It is recommended to use the 'lnkshrt config --instance-url' command
 # to set this value instead of manually editing this file.
-instance_url =
+instance_url = ""
 
 [authentication]
 # Authentication token used for API access.
 # It is recommended to set the token using the `lnkshrt login` or
 # `lnkshrt config --token` command rather than manually editing this file.
-token =
+token = ""
