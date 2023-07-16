@@ -24,13 +24,15 @@ def _send_request(
     if base_url is None:
         base_url = INSTANCE_URL
     if headers:
-        token = headers.get("Authorization", "").removeprefix("Bearer ")
-        if not token:
-            print(
-                "Authentication token is missing. "
-                "Please log in using 'lnkshrt login' to generate a token."
-            )
-            raise typer.Abort()
+        auth_header = headers.get("Authorization")
+        if auth_header:
+            token = auth_header.removeprefix("Bearer ")
+            if not token:
+                print(
+                    "Authentication token is missing. "
+                    "Please log in using 'lnkshrt login' to generate a token."
+                )
+                raise typer.Abort()
     try:
         with httpx.Client() as client:
             response = client.request(
