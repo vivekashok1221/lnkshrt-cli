@@ -16,10 +16,9 @@ from lnkshrt_cli.utils import (
     validate_url,
 )
 
-INSTANCE_URL_HELP_TEXT = (
-    "The URL of the instance to use for shortening links."
-    "If invoked without any value, the instance URL will be reset to the default."
-)
+INSTANCE_URL_HELP_TEXT = "The URL of the instance to use for shortening links."
+PASSWORD_HELP_TEXT = "Your password. If not provided, you will be prompted to enter it."
+
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_show_locals=False)
 
 
@@ -27,7 +26,12 @@ app = typer.Typer(no_args_is_help=True, pretty_exceptions_show_locals=False)
 def signup(
     username: Annotated[str, typer.Option()],
     email: Annotated[str, typer.Option()],
-    password: Annotated[str, typer.Option(prompt=True, confirmation_prompt=True, hide_input=True)],
+    password: Annotated[
+        str,
+        typer.Option(
+            help=PASSWORD_HELP_TEXT, prompt=True, confirmation_prompt=True, hide_input=True
+        ),
+    ],
 ) -> None:
     """Create a new user account."""
     print(register_user(username, password, email))
@@ -36,7 +40,7 @@ def signup(
 @app.command()
 def login(
     username: Annotated[str, typer.Option()],
-    password: Annotated[str, typer.Option(prompt=True, hide_input=True)],
+    password: Annotated[str, typer.Option(PASSWORD_HELP_TEXT, prompt=True, hide_input=True)],
 ) -> None:
     """
     Authenticate with an existing user account.
@@ -101,7 +105,14 @@ def config(
         str, typer.Option(help="Set the authentication token to be used for API access.")
     ] = "",
 ) -> None:
-    """Configure lnkshrt settings."""
+    """
+    Configure lnkshrt settings.
+
+    This command provides a convenient way to set and modify lnkshrt settings.
+    The settings are stored in a configuration file named `settings.toml`.
+    This command is the recommended way of modifying this file.
+
+    """
     with open(SETTINGS_FILE, "r") as f:
         configuration = load(f)
     updated = []
