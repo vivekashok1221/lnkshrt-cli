@@ -1,6 +1,6 @@
 ![screenshot](screenshot.jpeg)
 
-# `lnkshrt-cli`
+# lnkshrt-cli
 
 `lnkshrt-cli` is a command-line application that allows you to easily generate shortened URLs, authenticate with your lnkshrt account, delete links, and perform other actions from the command line. It provides a convenient and efficient way of interfacing with the [`lnkshrt`](https://github.com/vivekashok1221/lnkshrt) link shortening API hosted at [lnkshrt.xyz](https://lnkshrt.xyz)
 
@@ -93,7 +93,7 @@ $ lnkshrt [OPTIONS] COMMAND [ARGS]...
 * [`login`](#lnkshrt-login): Authenticate with an existing user account.
 * [`signup`](#lnkshrt-signup): Create a new user account.
 
-## `lnkshrt config`
+## lnkshrt config
 
 Configure lnkshrt settings.
 
@@ -113,7 +113,7 @@ $ lnkshrt config [OPTIONS]
 * `--token TEXT`: Set the authentication token to be used for API access.
 * `--help`: Show this message and exit.
 
-## `lnkshrt create`
+## lnkshrt create
 
 Create a shortened URL.
 
@@ -133,7 +133,7 @@ $ lnkshrt create [OPTIONS] URL
 * `--generate-qr-code TEXT`: If provided, generate a QR code for the shortened URLThe generated QR code image will be saved to the specified location.
 * `--help`: Show this message and exit.
 
-## `lnkshrt delete`
+## lnkshrt delete
 
 Delete a shortened URL.
 
@@ -151,7 +151,7 @@ $ lnkshrt delete [OPTIONS] URL
 
 * `--help`: Show this message and exit.
 
-## `lnkshrt login`
+## lnkshrt login
 
 Authenticate with an existing user account.
 
@@ -171,7 +171,7 @@ $ lnkshrt login [OPTIONS]
 * `--password TEXT`: Your password. If not provided, you will be prompted to enter it. [required]
 * `--help`: Show this message and exit.
 
-## `lnkshrt signup`
+## lnkshrt signup
 
 Create a new user account.
 
