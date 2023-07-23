@@ -8,7 +8,7 @@
 
 # The default URL of the link shortener API instance.
 # This URL will be used if no custom URL is specified.
-instance_url = "https://l.vivekashok.me"
+instance_url = "https://lnkshrt.xyz"
 
 [custom]
 # Specify the URL of your custom instance of the API.
