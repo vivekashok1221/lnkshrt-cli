@@ -40,7 +40,7 @@ def signup(
 @app.command()
 def login(
     username: Annotated[str, typer.Option()],
-    password: Annotated[str, typer.Option(PASSWORD_HELP_TEXT, prompt=True, hide_input=True)],
+    password: Annotated[str, typer.Option(help=PASSWORD_HELP_TEXT, prompt=True, hide_input=True)],
 ) -> None:
     """
     Authenticate with an existing user account.
